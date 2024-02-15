@@ -28,6 +28,7 @@ add_module_names = False
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
 }
+autodoc_member_order = "bysource"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
