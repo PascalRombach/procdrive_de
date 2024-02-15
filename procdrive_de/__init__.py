@@ -3,6 +3,8 @@ from concurrent.futures import TimeoutError as _TimeoutError
 import procdrive as _en
 from anki.misc.lanes import _LaneType
 
+Streckenabschnitt = _en.TrackPiece
+
 def verbinde(fahrzeug_id: int|None=None):
     return _en.connect(vehicle_id=fahrzeug_id)
 
