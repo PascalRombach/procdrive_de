@@ -1,4 +1,5 @@
 from typing import Callable as _Callable
+from concurrent.futures import TimeoutError as _TimeoutError
 import procdrive as _en
 from anki.misc.lanes import _LaneType
 
@@ -6,7 +7,10 @@ def verbinde(fahrzeug_id: int|None=None):
     return _en.connect(vehicle_id=fahrzeug_id)
 
 def warte_auf_neuen_streckenabschnitt(wartezeit: float|None=None):
-    return _en.wait_for_track_change(timeout=wartezeit)
+    try:
+        return _en.wait_for_track_change(timeout=wartezeit)
+    except _TimeoutError:
+        return None
 
 def setze_geschwindigkeit(geschwindigkeit: int, beschleunigung: int=500):
     return _en.set_speed(speed=geschwindigkeit, acceleration=beschleunigung)
