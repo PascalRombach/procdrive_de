@@ -6,18 +6,74 @@ from anki.misc.lanes import _LaneType
 Streckenabschnitt = _en.TrackPiece
 
 def verbinde(fahrzeug_id: int|None=None):
+    """
+    Verbindet das Programm mit dem Fahrzeug.
+    Diese Funktion sollte immer am Anfang des Programms ausgeführt werden.
+
+    Parameter
+    ---------
+    - `fahrzeug_id` :class:`Optional[int]`
+        Optionale Ganzzahl. (Kann also ausgelassen werden.)
+        Eine interne Zahl anhand der man das Fahrzeug identifizieren kann.
+        Für die meisten Anwendungen nicht wichtig.
+    """
     return _en.connect(vehicle_id=fahrzeug_id)
 
 def warte_auf_neuen_streckenabschnitt(wartezeit: float|None=None):
+    """
+    Wartet bis das Fahrzeug auf einen neuen Streckenabschnitt gefahren ist
+    oder bis die angegebene Wartezeit ausläuft.
+
+    .. note::
+        Wenn die Strecke noch nicht eingescannt wurde,
+        gibt diese Funktion immer :class:`None` zurück!
+
+    Parameter
+    ---------
+    - `wartezeit` :class:`Optional[float]`
+        Optionaler Fließkommazahl.
+        Die maximale Wartezeit in Sekunden.
+        Wenn gesetzt, wartet diese Funktion maximal `wartezeit` Sekunden und gibt
+        gegebenenfalls :class:`None` zurück, wenn die Wartezeit ausläuft.
+
+        Wenn keine Wartezeit gesetzt ist, wartet die Funktion potenziell unbegrenzte Zeit.
+    
+    Rückgabewert
+    ------------
+    :class:`Optional[Streckenabschnitt]`
+
+    Gibt den Streckenabschnitt zurück auf dem das Fahrzeug jetzt ist
+    oder :class:`None`, wenn die Wartezeit ausläuft.
+    """
     try:
         return _en.wait_for_track_change(timeout=wartezeit)
     except _TimeoutError:
         return None
 
 def setze_geschwindigkeit(geschwindigkeit: int, beschleunigung: int=500):
+    """
+    Beschleunigt oder entschleunigt das Fahrzeug auf eine gegebene Geschwindigkeit.
+
+    Parameter
+    ---------
+    - `geschwindigkeit` :class:`int`
+        Die Geschwindigkeit auf die das Fahrzeug beschleunigen soll in mm/s.
+        
+        .. warning::
+            Geschwindigkeiten unter 100mm/s sind unzuverlässig.
+    
+    - `beschleunigung` :class:`int`
+        Optionale Ganzzahl. 
+        Die Beschleunigung mit der sich die Geschwindigkeit ändern soll in mm/s².
+
+        Standardwert ist 500mm/s².
+    """
     return _en.set_speed(speed=geschwindigkeit, acceleration=beschleunigung)
 
 anhalten = _en.stop
+"""
+Hält das Fahrzeug an, indem die Geschwindigkeit auf 0 gesetzt wird.
+"""
 
 def spur_wechseln(
         spur: _LaneType,
