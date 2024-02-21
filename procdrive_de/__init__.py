@@ -1,7 +1,7 @@
 from typing import Callable as _Callable
 from concurrent.futures import TimeoutError as _TimeoutError
 import procdrive as _en
-from anki.misc.lanes import _LaneType, _Lane
+from anki.misc.lanes import _LaneType, _Lane, Lane3, Lane4
 
 Streckenabschnitt = _en.TrackPiece
 
@@ -174,9 +174,77 @@ def fahre_zum_start(
     )
 
 gib_aktuellen_streckenabschnitt = _en.get_current_track_piece
+"""
+Gibt den aktuellen Streckenabschnitt zurück.
+
+Rückgabewert
+------------
+:class:`TrackPiece|None`
+Der aktuelle Streckenabschnitt oder :const:`None`,
+wenn die Strecke noch nicht gescannt wurde.
+"""
 gib_karte = _en.get_map
+"""
+Gibt die aktuelle Karte zurück.
+
+Rückgabewert
+------------
+:class:`list[TrackPiece]|None`
+Die aktuelle Karte oder :const:`None`,
+wenn die Strecke noch nicht eingescannt wurde.
+"""
 gib_mittenabstand = _en.get_road_offset
+"""
+Gibt den aktuellen Abstand von der Mitte der Strecke zurück.
+
+Rückgabewert
+------------
+:class:`float|None`
+Der aktuelle Abstand von der Streckenmitte in mm
+oder :const:`None`, wenn noch keine Informationen dazu gefunden wurden.
+"""
 gib_geschwindigkeit = _en.get_speed
+"""
+Gibt die aktuelle Geschwindigkeit des Fahrzeugs in mm/s zurück.
+
+Rückgabewert
+------------
+:class:`int`
+Die aktuelle Geschwindigkeit in mm/s.
+"""
 gib_aktuelle_spur3 = _en.get_current_lane3
+"""
+Gibt die aktuelle Spur des Fahrzeugs im 3-Spuren System zurück.
+
+Rückgabewert
+------------
+:class:`Lane3|None`
+Die aktuelle Spur oder :const:`None`, 
+wenn es noch keine Spurendaten gibt 
+(z.B. kurz nach dem Programmstart)
+"""
 gib_aktuelle_spur4 = _en.get_current_lane4
+"""
+Gibt die aktuelle Spur des Fahrzeugs im 4-Spuren System zurück.
+
+Rückgabewert
+------------
+:class:`Lane4|None`
+Die aktuelle Spur oder :const:`None`, 
+wenn es noch keine Spurendaten gibt 
+(z.B. kurz nach dem Programmstart)
+"""
 gib_fahrzeug_id = _en.get_vehicle_id
+"""
+Gibt die ID des Fahrzeugs zurück.
+Die ID ist ein Wert, der beim Verbinden des Fahrzeugs gesetzt wird
+und selbst definiert werden kann. 
+
+Da diese Bibliothek nur ein Fahrzeug unterstützt, 
+ist dieser Wert nur selten nützlich.
+
+Rückgabewert
+------------
+:class:`int`
+Die ID des Fahrzeugs.
+"""
