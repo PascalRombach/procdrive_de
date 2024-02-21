@@ -27,6 +27,7 @@ language = 'de'
 add_module_names = False
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
+    'py-drivesdk': ("https://py-drivesdk.readthedocs.io/en/latest/", None)
 }
 autodoc_member_order = "bysource"
 

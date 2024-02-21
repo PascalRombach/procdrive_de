@@ -1,7 +1,7 @@
 from typing import Callable as _Callable
 from concurrent.futures import TimeoutError as _TimeoutError
 import procdrive as _en
-from anki.misc.lanes import _LaneType
+from anki.misc.lanes import _LaneType, _Lane
 
 Streckenabschnitt = _en.TrackPiece
 
@@ -80,6 +80,20 @@ def spur_wechseln(
         horizontale_geschwindigkeit: int=300,
         horizontale_beschleunigung: int=300
     ):
+    """
+    Wechselt auf die angegebene Spur mit einer vorgegebenen Geschwindigkeit.
+
+    Parameter
+    ---------
+    - `spur` :class:`_LaneType`
+        Die Spur, in die gewechselt werden soll.
+    - `horizontale_geschwindigkeit` :class:`int`
+        Optional: Die Geschwindigkeit, mit der das Fahrzeug die Spur wechselt in mm/s.
+        Standardwert ist 300mm/s.
+    - `horizontale_beschleunigung` :class:`int`
+        Optional: Die horizontale Beschleunigung des Fahrzeugs beim Spurwechsel in mm/s².
+        Standardwert ist 300mm/s².
+    """
     return _en.change_lane(
         lane=spur,
         horizontal_speed=horizontale_geschwindigkeit,
@@ -91,20 +105,68 @@ def mittenabstand_wechseln(
         horizontale_geschwindigkeit: int=300,
         horizontale_beschleunigung: int=300
     ):
+    """
+    Fährt das Auto auf eine Abstand von der Streckenmitte in mm.
+    Negative Zahlen sind die linke Seite der Strecke, positive Zahlen die Rechte.
+
+    .. note::
+        Die Orientierung des Fahrzeugs ist wichtig für die Unterscheidung
+        zwischen links und rechts.
+    
+    Parameter
+    ---------
+    - `mittenabstand` :class:`float`
+        Der Abstand von der Mitte der Strecke in mm.
+    - `horizontale_geschwindigkeit` :class:`int`
+        Optional: Die Geschwindigkeit, mit der das Fahrzeug die Spur wechselt in mm/s.
+        Standardwert ist 300mm/s.
+    - `horizontale_beschleunigung` :class:`int`
+        Optional: Die horizontale Beschleunigung des Fahrzeugs beim Spurwechsel in mm/s².
+        Standardwert ist 300mm/s².
+    """
     return _en.change_position(
         road_center_offset=mittenabstand,
         horizontal_speed=horizontale_geschwindigkeit,
         horizontal_acceleration=horizontale_beschleunigung
     )
 
-def gib_spur(spurentyp: _LaneType):
-    return _en.get_lane(mode=spurentyp)
+def gib_spur(spurentyp: type[_Lane]) -> _Lane:
+    """
+    Gibt die aktuelle Spur des Fahrzeugs innerhalb des angegebenen Spurensystems zurück.
+
+    Parameter
+    ---------
+    - `spurentyp` :class:`type[_Lane]`
+        Das Spurensystem, auf das geprüft werden soll.
+    
+    Rückgabewert
+    ------------
+    :class:`_Lane`
+    Eine Spur aus dem Spurensystem.
+    """
+    return _en.get_lane(mode=spurentyp)  # type:ignore
 
 def fahre_zum_start(
         geschwindigkeit: int=300,
         warten: bool=True,
         bei_ende: _Callable[[], None]|None=None
     ):
+    """
+    Fährt das Fahrzeug bis zum Start.
+
+    Parameter
+    ---------
+    - `geschwindigkeit` :class:`int`
+        Die Geschwindigkeit mit der das Fahrzeug fahren soll.
+        Standardwert ist 300mm/s.
+    - `warten` :class:`bool`
+        Wahrheitswert. Wenn auf :const:`True` (der Standard)
+        wartet diese Funktion bis das Fahrzeug am Start ankommt.
+        Sonst endet die Funktion sofort.
+    - `bei_ende` :class:`Callable[[], None]`
+        Eine Funktion ohne Argument, die aufgerufen werden soll,
+        wenn das Fahrzeug den Start erreicht hat.
+    """
     return _en.align_to_start(
         speed=geschwindigkeit,
         blocking=warten,
